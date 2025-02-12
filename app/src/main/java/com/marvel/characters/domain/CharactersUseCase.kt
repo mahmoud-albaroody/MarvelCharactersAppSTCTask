@@ -8,5 +8,5 @@ class CharactersUseCase constructor(
     private val repo: CharactersRepository,
 ) {
     suspend fun invoke(characterRequest: CharacterRequest)
-    = repo.getCharactersPagingDataSource(characterRequest)
+    = repo.getCharacters(characterRequest)
 }

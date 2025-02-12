@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.marvel.characters"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.marvel.characters"
@@ -63,13 +63,13 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     // compose navigation
-    implementation ("androidx.navigation:navigation-compose:2.7.5")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation ("androidx.navigation:navigation-compose:2.8.7")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
     // multidex
     implementation ("androidx.multidex:multidex:2.0.1")
 
     // hilt
-    implementation ("com.google.dagger:hilt-android:2.48.1")
+    implementation ("com.google.dagger:hilt-android:2.49")
     kapt ("com.google.dagger:hilt-android-compiler:2.48.1")
 
     // retrofit
@@ -77,9 +77,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
 
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.0")
     // pagination
-    implementation ("androidx.paging:paging-compose:3.2.1")
+    implementation ("androidx.paging:paging-compose:3.3.6")
 
     // coil with animation
 
@@ -87,6 +87,9 @@ dependencies {
     implementation ("com.github.skydoves:landscapist-placeholder:2.2.11")
     implementation ("com.github.skydoves:landscapist-animation:2.2.11")
     implementation ("com.github.skydoves:landscapist-transformation:2.2.11")
+
+    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation("io.coil-kt:coil-compose:2.3.0")
 
     implementation ("com.google.code.gson:gson:2.10.1")
     // splash screen
