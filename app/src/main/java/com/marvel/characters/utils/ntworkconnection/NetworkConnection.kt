@@ -12,9 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
-/**
- * Network utility to get current state of internet connection
- */
+
 val Context.currentConnectivityState: ConnectionState
     get() {
         val connectivityManager =
