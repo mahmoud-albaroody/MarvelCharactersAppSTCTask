@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
+    id ("dagger.hilt.android.plugin")
 }
 
 android {
@@ -59,6 +61,37 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
+    // compose navigation
+    implementation ("androidx.navigation:navigation-compose:2.7.5")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    // multidex
+    implementation ("androidx.multidex:multidex:2.0.1")
+
+    // hilt
+    implementation ("com.google.dagger:hilt-android:2.48.1")
+    kapt ("com.google.dagger:hilt-android-compiler:2.48.1")
+
+    // retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    // pagination
+    implementation ("androidx.paging:paging-compose:3.2.1")
+
+    // coil with animation
+
+    implementation ("com.github.skydoves:landscapist-coil:2.2.11")
+    implementation ("com.github.skydoves:landscapist-placeholder:2.2.11")
+    implementation ("com.github.skydoves:landscapist-animation:2.2.11")
+    implementation ("com.github.skydoves:landscapist-transformation:2.2.11")
+
+    implementation ("com.google.code.gson:gson:2.10.1")
+    // splash screen
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")

@@ -1,4 +1,4 @@
-package com.marvel.characters
+package com.marvel.characters.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
