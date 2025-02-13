@@ -10,7 +10,12 @@ sealed class Screen(
     val objectPath: String = ""
 ) {
 
-    data object Home : Screen("home_screen")
+    data object Characters : Screen("characters_screen")
 
-
+    data object CharacterDetails :
+        Screen(
+            "characterDetails_screen",
+            objectName = "characterDetailsItem",
+            objectPath = "/{characterDetailsItem}"
+        )
 }

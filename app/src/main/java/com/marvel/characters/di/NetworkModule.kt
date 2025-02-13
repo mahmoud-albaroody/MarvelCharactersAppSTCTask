@@ -6,6 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Cache
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
@@ -20,10 +22,10 @@ object NetworkModule {
     /**
      * Provides BaseUrl as string
      */
-    @Singleton
     @Provides
-    fun provideBaseURL(): String {
-        return ApiURL.BASE_URL
+    @Singleton
+    fun provideBaseURL(): BaseUrlInterceptor {
+        return BaseUrlInterceptor()
     }
     /**
      * Provides LoggingInterceptor for api information
@@ -33,12 +35,17 @@ object NetworkModule {
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
+
+
     /**
      * Provides custom OkkHttp
      */
     @Singleton
     @Provides
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        baseUrlInterceptor: BaseUrlInterceptor
+    ): OkHttpClient {
         val okHttpClient = OkHttpClient().newBuilder()
 
         okHttpClient.callTimeout(40, TimeUnit.SECONDS)
@@ -46,7 +53,7 @@ object NetworkModule {
         okHttpClient.readTimeout(40, TimeUnit.SECONDS)
         okHttpClient.writeTimeout(40, TimeUnit.SECONDS)
         okHttpClient.addInterceptor(loggingInterceptor)
-        okHttpClient.build()
+        okHttpClient.addInterceptor(baseUrlInterceptor)
         return okHttpClient.build()
     }
     /**
@@ -63,12 +70,11 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofitClient(
-        baseUrl: String,
         okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(ApiURL.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()

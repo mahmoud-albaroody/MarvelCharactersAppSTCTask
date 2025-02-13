@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -41,6 +42,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.marvel.characters.R
 import com.marvel.characters.data.model.CharacterItem
 import com.marvel.characters.data.model.Thumbnail
+import com.marvel.characters.navigation.Screen
 import com.marvel.characters.ui.theme.DefaultBackgroundColor
 import com.marvel.characters.ui.theme.SecondaryFontColor
 import com.skydoves.landscapist.ImageOptions
@@ -53,7 +55,7 @@ import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 @Composable
 fun CharacterItemList(
     characterList: ArrayList<CharacterItem>? = null,
-    navController: NavController,
+    onItemClick: (CharacterItem) -> Unit,
 ) {
     Column(modifier = Modifier.background(DefaultBackgroundColor)) {
         characterList?.let {
@@ -62,8 +64,9 @@ fun CharacterItemList(
             ) {
                 items(characterList) { item ->
                     CharacterItemView(
-                        item = item,
-                        navController = navController
+                        item = item, onItemClick = {
+                            onItemClick(it)
+                        }
                     )
                 }
             }
@@ -74,13 +77,24 @@ fun CharacterItemList(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun CharacterItemView(item: CharacterItem, navController: NavController) {
+fun CharacterItemView(
+    item: CharacterItem,
+    onItemClick: (CharacterItem) -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp // Screen height in DP
-
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .height((screenHeight * 0.25).dp)) {
+    // Gradient Background
+    val gradientBrush = Brush.verticalGradient(
+        colors = listOf(Color(0xFF646363), Color(0xFFE3E3E3)) // Dark to Light
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height((screenHeight * 0.25).dp)
+            .clickable {
+                onItemClick(item)
+            }
+    ) {
         Box {
 //        GlideImage(
 //            modifier = Modifier
@@ -92,7 +106,9 @@ fun CharacterItemView(item: CharacterItem, navController: NavController) {
 //            contentScale = ContentScale.FillBounds,
 //        )
             Image(
-                painter = rememberAsyncImagePainter(item.thumbnail?.path.plus(".").plus(item.thumbnail?.extension)),
+                painter = rememberAsyncImagePainter(
+                    item.thumbnail?.path.plus(".").plus(item.thumbnail?.extension)
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -101,11 +117,11 @@ fun CharacterItemView(item: CharacterItem, navController: NavController) {
             )
             // Custom Shape for Label
             val labelShape = GenericShape { size, _ ->
-                moveTo(0f, 0f)                     // Start at top-left
-                lineTo(size.width * 0.90f, 0f)     // Move right
-                lineTo(size.width, size.height )        // Diagonal cut
+                moveTo(0.2f, 0f)                     // Start at top-left
+                lineTo(size.width, 0f)     // Move right
+                lineTo(size.width * 0.90f, size.height)        // Diagonal cut
                 lineTo(size.width, size.height)         // Bottom-left
-                lineTo(size.width * 0.90f, size.height)              // Back to bottom-left corner
+                lineTo(size.width * 0.10f, size.height)              // Back to bottom-left corner
             }
 
             // Name Label with Diagonal Cut
@@ -118,13 +134,19 @@ fun CharacterItemView(item: CharacterItem, navController: NavController) {
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
+                    modifier = Modifier.padding(8.dp),
                     text = item.name.toString(),
-                    fontSize = 16.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(gradientBrush) // Apply gradient
+        )
 
 
 //        CoilImage(
@@ -165,6 +187,8 @@ fun Character() {
                 extension = ".jpg"
             )
         ),
-        navController = navController
+        onItemClick = {
+
+        }
     )
 }

@@ -1,4 +1,4 @@
-package com.marvel.characters.ui.screens.mainscreen
+package com.marvel.characters.ui.screens.mainScreen
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +9,8 @@ import com.marvel.characters.data.model.CharactersModel
 import com.marvel.characters.domain.CharactersUseCase
 import com.marvel.characters.utils.network.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

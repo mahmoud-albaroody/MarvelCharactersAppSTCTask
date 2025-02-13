@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.marvel.characters.ui.theme.MarvelCharactersTheme
-import com.marvel.characters.ui.screens.mainscreen.MainScreen
+import com.marvel.characters.ui.screens.mainScreen.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
