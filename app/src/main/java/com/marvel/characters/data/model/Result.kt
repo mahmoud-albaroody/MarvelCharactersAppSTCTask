@@ -9,6 +9,7 @@ data class Result(
     val id: Int?=null,
     val modified: String?=null,
     val name: String?=null,
+    val title:String?=null,
     val resourceURI: String?=null,
     val series: Stories?=null,
     val stories: Stories?=null,

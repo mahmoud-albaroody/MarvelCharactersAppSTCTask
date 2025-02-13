@@ -16,12 +16,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharactersDetailsViewModel
-@Inject constructor(private val repo: CharactersUseCase,
-                    private val networkManager: NetworkManager
+@Inject constructor(
+    private val repo: CharactersUseCase,
+    private val networkManager: NetworkManager
 ) : ViewModel() {
-     val comics: MutableState<DataState<CharactersModel>?> = mutableStateOf(null)
+    val comics: MutableState<DataState<CharactersModel>?> = mutableStateOf(null)
+    val series: MutableState<DataState<CharactersModel>?> = mutableStateOf(null)
+    val stores: MutableState<DataState<CharactersModel>?> = mutableStateOf(null)
+    val events: MutableState<DataState<CharactersModel>?> = mutableStateOf(null)
+    val urls: MutableState<DataState<CharactersModel>?> = mutableStateOf(null)
 
-    fun comicsList(characterRequest: CharacterRequest,url:String) {
+    fun comicsList(characterRequest: CharacterRequest, url: String) {
         networkManager.changeBaseUrl(url)
         viewModelScope.launch {
             repo.invoke(characterRequest = characterRequest).onEach {
@@ -30,6 +35,32 @@ class CharactersDetailsViewModel
         }
     }
 
+    fun seriesList(characterRequest: CharacterRequest, url: String) {
+        networkManager.changeBaseUrl(url)
+        viewModelScope.launch {
+            repo.invoke(characterRequest = characterRequest).onEach {
+                series.value = it
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun storesList(characterRequest: CharacterRequest, url: String) {
+        networkManager.changeBaseUrl(url)
+        viewModelScope.launch {
+            repo.invoke(characterRequest = characterRequest).onEach {
+                stores.value = it
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun eventsList(characterRequest: CharacterRequest, url: String) {
+        networkManager.changeBaseUrl(url)
+        viewModelScope.launch {
+            repo.invoke(characterRequest = characterRequest).onEach {
+                events.value = it
+            }.launchIn(viewModelScope)
+        }
+    }
 
 
 }

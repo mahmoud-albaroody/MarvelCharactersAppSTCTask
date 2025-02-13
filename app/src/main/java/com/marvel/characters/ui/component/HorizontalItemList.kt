@@ -3,11 +3,14 @@ package com.marvel.characters.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -19,25 +22,27 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.marvel.characters.data.model.ComicsItem
 import com.marvel.characters.ui.theme.DefaultBackgroundColor
+import com.marvel.characters.ui.theme.SecondaryFontColor
 
 
 @Composable
 fun HorizontalItemList(
     items: ArrayList<ComicsItem>,
-    text:String,
+    text: String,
     onItemClick: (ComicsItem) -> Unit,
 ) {
-    Column(modifier = Modifier.background(DefaultBackgroundColor)) {
-
-
-        TextRed(text = text)
+    Column(modifier = Modifier.background(SecondaryFontColor)) {
+        Box(Modifier.padding(vertical = 8.dp)) {
+            TextRed(text = text)
+        }
         LazyRow(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.wrapContentHeight()
         ) {
             items(items) { item ->
                 HorizontalItemView(
@@ -62,7 +67,8 @@ fun HorizontalItemView(
     Column(
         modifier = Modifier
             .width((screenWidth * 0.3).dp)
-            .height((screenHeight * 0.25).dp)
+            .padding(4.dp)
+
             .clickable {
                 onItemClick(item)
             }
@@ -75,17 +81,19 @@ fun HorizontalItemView(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height((screenHeight * 0.20).dp)
                 .clip(RectangleShape)
         )
 
 
         Text(
-            modifier = Modifier.padding(8.dp),
-            text = item.name.toString(),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
+            text = item.title.toString(),
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

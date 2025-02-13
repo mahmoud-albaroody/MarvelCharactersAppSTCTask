@@ -2,10 +2,9 @@ package com.marvel.characters.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,11 +35,11 @@ fun CharacterDetailsImage(thumbnail: Thumbnail) {
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .fillMaxHeight()
+            .fillMaxWidth()
             .height((screenHeight * 0.5).dp)
             .clip(RectangleShape)
             .clickable {
-//                navController.navigate(Screen.CharacterDetails.route)
+
             }
     )
 }
