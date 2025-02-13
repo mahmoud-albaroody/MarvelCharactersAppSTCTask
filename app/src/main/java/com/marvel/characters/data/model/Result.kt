@@ -14,5 +14,6 @@ data class Result(
     val series: Stories?=null,
     val stories: Stories?=null,
     val thumbnail: Thumbnail?=null,
-    val urls: List<Url>?=null
+    val urls: List<Url>?=null,
+    val images:ArrayList<Thumbnail>?=null
 )

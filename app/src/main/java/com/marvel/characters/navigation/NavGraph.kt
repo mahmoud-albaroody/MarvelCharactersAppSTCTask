@@ -1,5 +1,6 @@
 package com.marvel.characters.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -11,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.marvel.characters.ui.screens.characterDetailsScreen.CharacterDetailsScreen
+import com.marvel.characters.ui.screens.characterImagesPrivewScreen.CharacterImagePreview
 import com.marvel.characters.ui.screens.charactersScreen.CharactersScreen
 import com.marvel.characters.ui.screens.mainScreen.MainViewModel
 
@@ -36,6 +38,20 @@ fun Navigation(
                 )
             }
         }
+        composable(
+            Screen.CharacterImagePreview.route.plus(Screen.CharacterImagePreview.objectPath)
+        ) { backStack ->
+            val images = backStack.arguments?.getString(Screen.CharacterImagePreview.objectName)
+            Log.e("dddddd", images.toString())
+            images?.let {
+                CharacterImagePreview(
+                    navController = navController,
+                    mainViewModel = mainViewModel,
+                    images
+                )
+            }
+        }
+
         composable(Screen.Characters.route) {
             CharactersScreen(
                 navController = navController,

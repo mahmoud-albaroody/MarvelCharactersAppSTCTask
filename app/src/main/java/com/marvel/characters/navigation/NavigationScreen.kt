@@ -18,4 +18,12 @@ sealed class Screen(
             objectName = "characterDetailsItem",
             objectPath = "/{characterDetailsItem}"
         )
+
+    data object CharacterImagePreview :
+        Screen(
+            "characterImagePreview_screen",
+            objectName = "images",
+            objectPath = "/{images}"
+        )
+
 }

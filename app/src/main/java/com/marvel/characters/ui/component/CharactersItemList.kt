@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.GenericShape
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -23,6 +25,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +35,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.marvel.characters.data.model.CharacterItem
 import com.marvel.characters.data.model.Thumbnail
 import com.marvel.characters.ui.theme.DefaultBackgroundColor
-
+import com.marvel.characters.ui.theme.SecondaryFontColor
 
 
 @Composable
@@ -65,20 +68,25 @@ fun CharacterItemView(
     onItemClick: (CharacterItem) -> Unit
 ) {
     val configuration = LocalConfiguration.current
+    val screenWeight = configuration.screenWidthDp // Screen height in DP
+
     val screenHeight = configuration.screenHeightDp // Screen height in DP
     // Gradient Background
-    val gradientBrush = Brush.verticalGradient(
-        colors = listOf(Color(0xFF646363), Color(0xFFE3E3E3)) // Dark to Light
-    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height((screenHeight * 0.25).dp)
+            .height((screenHeight * 0.24).dp)
             .clickable {
                 onItemClick(item)
             }
     ) {
         Box {
+            Box(
+                Modifier
+                    .background(SecondaryFontColor)
+                    .alpha(0.8f)
+            ) {
 //        GlideImage(
 //            modifier = Modifier
 //                .fillMaxSize()
@@ -88,47 +96,56 @@ fun CharacterItemView(
 //            transition =  CrossFade,
 //            contentScale = ContentScale.FillBounds,
 //        )
-            Image(
-                painter = rememberAsyncImagePainter(
-                    item.thumbnail?.path.plus(".").plus(item.thumbnail?.extension)
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RectangleShape)
-            )
-            // Custom Shape for Label
-            val labelShape = GenericShape { size, _ ->
-                moveTo(0.2f, 0f)                     // Start at top-left
-                lineTo(size.width, 0f)     // Move right
-                lineTo(size.width * 0.90f, size.height)        // Diagonal cut
-                lineTo(size.width, size.height)         // Bottom-left
-                lineTo(size.width * 0.10f, size.height)              // Back to bottom-left corner
-            }
-
-            // Name Label with Diagonal Cut
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .clip(labelShape)
-                    .background(Color.White)
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = item.name.toString(),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        item.thumbnail?.path.plus(".").plus(item.thumbnail?.extension)
+                    ),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RectangleShape)
                 )
             }
+            // Custom Shape for Label
+            val labelShape = GenericShape { size, _ ->
+                moveTo(size.width * 0.08f, 0f)
+                lineTo(size.width, 0f)
+                lineTo(size.width * 0.91f, size.height)
+                lineTo(0.0f, size.height)
+                lineTo(0.0f, size.height)
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 38.dp
+                    )
+                    .align(Alignment.BottomStart)
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .width((screenWeight * 0.5).dp)
+                        .clip(labelShape)
+                        .background(Color.White)
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        text = item.name.toString(),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(gradientBrush) // Apply gradient
-        )
+    }
+}
 
 
 //        CoilImage(
@@ -154,23 +171,3 @@ fun CharacterItemView(
 ////                )
 //            },
 //        )
-    }
-}
-
-@Preview
-@Composable
-fun Character() {
-    val navController = rememberNavController()
-
-    CharacterItemView(
-        item = CharacterItem(
-            thumbnail = Thumbnail(
-                path = "http://i.annihil.us/u/prod/marvel/i/mg/6/20/52602f21f29ec",
-                extension = ".jpg"
-            )
-        ),
-        onItemClick = {
-
-        }
-    )
-}

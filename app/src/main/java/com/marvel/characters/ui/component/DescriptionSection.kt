@@ -3,6 +3,7 @@ package com.marvel.characters.ui.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,7 @@ import com.marvel.characters.data.model.CharacterItem
 fun DescriptionSection(characterItem: CharacterItem) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp // Screen height in DP
-    Column {
+    Column(Modifier.fillMaxSize()) {
         Box(
             Modifier
                 .fillMaxWidth()
@@ -24,26 +25,26 @@ fun DescriptionSection(characterItem: CharacterItem) {
         ) {
             CharacterDetails(characterItem = characterItem)
         }
-        Column {
+        Column(Modifier.padding(horizontal = 8.dp)) {
 
             Column(Modifier.padding(vertical = 4.dp)) {
 
-                Box(Modifier.padding(vertical = 2.dp)) {
+                Box(Modifier.padding(vertical = 4.dp)) {
                     TextRed(text = "NAME")
                 }
 
-                Box(Modifier.padding(vertical = 2.dp)) {
+                Box(Modifier.padding(vertical = 4.dp)) {
                     TextWhite(text = characterItem.name ?: "", fontSize = 16)
                 }
             }
 
-                Box(Modifier.padding(vertical = 2.dp)) {
-                    TextRed(text = "DESCRIPTION")
-                }
-                Box(Modifier.padding(vertical = 2.dp)) {
-                    TextWhite(text = characterItem.description ?: "", fontSize = 16)
-                }
+            Box(Modifier.padding(vertical = 4.dp)) {
+                TextRed(text = "DESCRIPTION")
             }
+            Box(Modifier.padding(vertical = 4.dp)) {
+                TextWhite(text = characterItem.description ?: "", fontSize = 16)
+            }
+        }
 
     }
 }

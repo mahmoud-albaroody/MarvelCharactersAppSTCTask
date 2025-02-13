@@ -18,10 +18,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.marvel.characters.data.model.Thumbnail
 
 
 @Composable
-fun DiscreteImageViewer(images: List<String>, onClose: () -> Unit) {
+fun DiscreteImageViewer(images: List<Thumbnail>, onClose: () -> Unit) {
     val pagerState = rememberPagerState(pageCount = { images.size })
     Box(
         modifier = Modifier
@@ -59,17 +60,17 @@ fun DiscreteImageViewer(images: List<String>, onClose: () -> Unit) {
             ) { page ->
                 val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
                 val scale = 1f - (0.15f * kotlin.math.abs(pageOffset)) // Scale effect
-                var alpha = 1f - (0.3f * kotlin.math.abs(pageOffset)) // Fade effect
+                val alpha1 = 1f - (0.3f * kotlin.math.abs(pageOffset)) // Fade effect
 
                 Image(
-                    painter = rememberAsyncImagePainter(images[page]),
+                    painter = rememberAsyncImagePainter(images[page].path+"."+images[page].extension),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .graphicsLayer {
                             scaleX = scale
                             scaleY = scale
-                            alpha = alpha
+                            alpha = alpha1
                         },
                     contentScale = ContentScale.Fit
                 )
@@ -83,7 +84,7 @@ fun DiscreteImageViewer(images: List<String>, onClose: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Ant-Man & The Wasp (2010) #${pagerState.currentPage + 1}",
+                    text = images[pagerState.currentPage].title+ " #${pagerState.currentPage + 1}",
                     color = Color.White,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center
