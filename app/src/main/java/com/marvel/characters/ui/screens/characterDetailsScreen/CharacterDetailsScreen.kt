@@ -1,8 +1,6 @@
 package com.marvel.characters.ui.screens.characterDetailsScreen
 
 import android.net.Uri
-import android.util.Log
-import android.view.textclassifier.TextClassification.Request
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,8 +35,6 @@ import com.marvel.characters.ui.component.TextWhite
 import com.marvel.characters.ui.screens.mainScreen.MainViewModel
 import com.marvel.characters.ui.theme.SecondaryFontColor
 import com.marvel.characters.utils.network.DataState
-import com.marvel.characters.utils.ntworkconnection.ConnectionState
-import com.marvel.characters.utils.ntworkconnection.connectivityState
 import kotlinx.coroutines.delay
 
 
@@ -48,11 +45,8 @@ fun CharacterDetailsScreen(
 ) {
     val charactersDetailsViewModel = hiltViewModel<CharactersDetailsViewModel>()
 
-    val charactersItem = remember { mutableStateOf<Result>(Result()) }
+    var charactersItem by remember { mutableStateOf(Result()) }
 
-    // internet connection
-    val connection by connectivityState()
-    val isConnected = connection === ConnectionState.Available
     var comicsUrl: String? = null
     var seriesUrl: String? = null
     var storesUrl: String? = null
@@ -61,17 +55,20 @@ fun CharacterDetailsScreen(
 
     LaunchedEffect(key1 = 0) {
         characterId?.let {
-            charactersItem.value =
-                (mainViewModel.characters as DataState.Success<CharactersModel>)
-                    .data.data.results.find { it.id.toString() == characterId }!!
-            comicsUrl = (mainViewModel.characters as DataState.Success<CharactersModel>)
-                .data.data.results.find { it.id.toString() == characterId }?.comics?.collectionURI
-            seriesUrl = (mainViewModel.characters as DataState.Success<CharactersModel>)
-                .data.data.results.find { it.id.toString() == characterId }?.series?.collectionURI
-            storesUrl = (mainViewModel.characters as DataState.Success<CharactersModel>)
-                .data.data.results.find { it.id.toString() == characterId }?.stories?.collectionURI
-            eventsUrl = (mainViewModel.characters as DataState.Success<CharactersModel>)
-                .data.data.results.find { it.id.toString() == characterId }?.events?.collectionURI
+            (mainViewModel.characters as DataState.Success<CharactersModel>)
+                .data.data.results.let { results ->
+                    if (results.find { it.id.toString() == characterId } != null)
+                        charactersItem = results.find { it.id.toString() == characterId }!!
+                    comicsUrl =
+                        results.find { it.id.toString() == characterId }?.comics?.collectionURI
+                    seriesUrl =
+                        results.find { it.id.toString() == characterId }?.series?.collectionURI
+                    storesUrl =
+                        results.find { it.id.toString() == characterId }?.stories?.collectionURI
+                    eventsUrl =
+                        results.find { it.id.toString() == characterId }?.events?.collectionURI
+                }
+
         }
         comicsUrl?.let {
             charactersDetailsViewModel
@@ -107,7 +104,7 @@ fun CharacterDetailsScreen(
                     .fillMaxSize()
             ) {
                 item {
-                    DescriptionSection(characterItem = charactersItem.value)
+                    DescriptionSection(characterItem = charactersItem)
                 }
 
                 item {
@@ -117,7 +114,7 @@ fun CharacterDetailsScreen(
 
                                 HorizontalItemList(
                                     items = it.data.data.results as ArrayList,
-                                    text = "COMICS",
+                                    text = stringResource(R.string.comics),
                                     onItemClick = {
                                         it.images?.map { image ->
                                             image.title = it.title.toString()
@@ -137,7 +134,7 @@ fun CharacterDetailsScreen(
                             if (it is DataState.Success<CharactersModel>) {
                                 HorizontalItemList(
                                     items = it.data.data.results as ArrayList,
-                                    text = "SERIES",
+                                    text = stringResource(R.string.series),
                                     onItemClick = {
                                         it.images?.map { image ->
                                             image.title = it.title.toString()
@@ -157,7 +154,7 @@ fun CharacterDetailsScreen(
                             if (it is DataState.Success<CharactersModel>) {
                                 HorizontalItemList(
                                     items = it.data.data.results as ArrayList,
-                                    text = "STORIES",
+                                    text = stringResource(R.string.stories),
                                     onItemClick = {
                                         it.images?.map { image ->
                                             image.title = it.title.toString()
@@ -175,21 +172,22 @@ fun CharacterDetailsScreen(
                         }
                         charactersDetailsViewModel.events.let {
                             if (it is DataState.Success<CharactersModel>
-                                && it.data.data.results.isNotEmpty()) {
-                                    HorizontalItemList(
-                                        items = it.data.data.results as ArrayList,
-                                        text = "EVENTS",
-                                        onItemClick = {
-                                            it.images?.map { image ->
-                                                image.title = it.title.toString()
-                                            }
-                                            val imagesJson = Uri.encode(Gson().toJson(it.images))
-                                            navController.navigate(
-                                                Screen.CharacterImagePreview.route.plus(
-                                                    "/${imagesJson}"
-                                                )
+                                && it.data.data.results.isNotEmpty()
+                            ) {
+                                HorizontalItemList(
+                                    items = it.data.data.results as ArrayList,
+                                    text = stringResource(R.string.events),
+                                    onItemClick = {
+                                        it.images?.map { image ->
+                                            image.title = it.title.toString()
+                                        }
+                                        val imagesJson = Uri.encode(Gson().toJson(it.images))
+                                        navController.navigate(
+                                            Screen.CharacterImagePreview.route.plus(
+                                                "/${imagesJson}"
                                             )
-                                        })
+                                        )
+                                    })
 
 
                             }
@@ -197,34 +195,39 @@ fun CharacterDetailsScreen(
                     }
                 }
 
-                item {
-                    Column(
-                        Modifier
-                            .padding(horizontal = 8.dp)
-                            .padding(top = 8.dp)
-                    ) {
-                        TextRed(text = "RELATED LINKS")
-                        Spacer(modifier = Modifier.padding(bottom = 24.dp))
-                        charactersItem.value.urls?.map {
-                            Box(Modifier.padding(vertical = 10.dp)) {
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    TextWhite(text = it.type, fontSize = 20)
-                                    Image(
-                                        painter = painterResource(R.drawable.baseline_arrow_forward_ios_24),
-                                        contentDescription = ""
-                                    )
+                charactersItem.urls?.let {
+                    item {
+                        Column(
+                            Modifier
+                                .padding(horizontal = 8.dp)
+                                .padding(top = 8.dp)
+                        ) {
+
+                            TextRed(text = stringResource(R.string.related_links))
+                            Spacer(modifier = Modifier.padding(bottom = 24.dp))
+                            it.map {
+
+                                Box(Modifier.padding(vertical = 10.dp)) {
+                                    Row(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        TextWhite(text = it.type, fontSize = 20)
+                                        Image(
+                                            painter = painterResource(R.drawable.baseline_arrow_forward_ios_24),
+                                            contentDescription = ""
+                                        )
+                                    }
                                 }
                             }
+                            Spacer(modifier = Modifier.padding(bottom = 50.dp))
                         }
-                        Spacer(modifier = Modifier.padding(bottom = 50.dp))
+
+
                     }
-
-
                 }
+
             }
             Image(
                 modifier = Modifier

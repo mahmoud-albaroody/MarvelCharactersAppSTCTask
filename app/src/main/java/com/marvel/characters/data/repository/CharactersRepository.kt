@@ -1,8 +1,12 @@
 package com.marvel.characters.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.marvel.characters.data.model.CharacterItem
 import com.marvel.characters.data.model.CharacterRequest
 import com.marvel.characters.data.model.CharactersModel
+import com.marvel.characters.data.paging.CharactersPagingDataSource
 import com.marvel.characters.data.remote.ApiService
 import com.marvel.characters.utils.network.DataState
 import kotlinx.coroutines.flow.Flow
@@ -30,4 +34,10 @@ class CharactersRepository @Inject constructor(
 
 
     }
+
+//    override fun getCharacters(characterRequest: CharacterRequest): Flow<PagingData<CharacterItem>>    = Pager(
+//    pagingSourceFactory =
+//    { CharactersPagingDataSource(apiService) },
+//    config = PagingConfig(pageSize = 1)
+//    ).flow
 }

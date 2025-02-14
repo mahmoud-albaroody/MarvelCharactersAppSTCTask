@@ -1,6 +1,8 @@
 package com.marvel.characters.data.remote
 
 import com.marvel.characters.data.model.CharactersModel
+import com.marvel.characters.utils.network.DataState
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 

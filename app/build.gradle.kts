@@ -88,8 +88,13 @@ dependencies {
     implementation("com.github.skydoves:landscapist-animation:2.2.11")
     implementation("com.github.skydoves:landscapist-transformation:2.2.11")
 
+    //glide
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+   //coil
     implementation("io.coil-kt:coil-compose:2.3.0")
+
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+
     //JSON Conversion
     implementation("com.google.code.gson:gson:2.10.1")
 
