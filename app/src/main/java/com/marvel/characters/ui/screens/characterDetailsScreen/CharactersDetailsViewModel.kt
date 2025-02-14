@@ -1,5 +1,7 @@
 package com.marvel.characters.ui.screens.characterDetailsScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,44 +41,53 @@ class CharactersDetailsViewModel
     var urls by mutableStateOf<DataState<CharactersModel>?>(null)
         private set
 
-    fun comicsList(characterRequest: CharacterRequest, url: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun comicsList(characterRequest: CharacterRequest, url: String,
+                   hash:String, ts:String) {
         if (comics == null) {
             networkManager.changeBaseUrl(url)
             viewModelScope.launch {
-                repo.invoke(characterRequest = characterRequest).onEach {
+                repo.invoke(characterRequest = characterRequest,hash = hash,ts = ts).onEach {
                     comics = it
                 }.launchIn(viewModelScope)
             }
         }
     }
 
-    fun seriesList(characterRequest: CharacterRequest, url: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun seriesList(characterRequest: CharacterRequest, url: String,
+                   hash:String, ts:String) {
         if (series == null) {
             networkManager.changeBaseUrl(url)
             viewModelScope.launch {
-                repo.invoke(characterRequest = characterRequest).onEach {
+                repo.invoke(characterRequest = characterRequest,hash = hash,ts = ts).onEach {
                     series = it
                 }.launchIn(viewModelScope)
             }
         }
     }
 
-    fun storesList(characterRequest: CharacterRequest, url: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun storesList(characterRequest: CharacterRequest, url: String,
+                   hash:String, ts:String) {
         if (stores == null) {
             networkManager.changeBaseUrl(url)
             viewModelScope.launch {
-                repo.invoke(characterRequest = characterRequest).onEach {
+                repo.invoke(characterRequest = characterRequest,hash = hash,ts = ts).onEach {
                     stores = it
                 }.launchIn(viewModelScope)
             }
         }
     }
 
-    fun eventsList(characterRequest: CharacterRequest, url: String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun eventsList(characterRequest: CharacterRequest, url: String,
+                   hash:String, ts:String) {
         if (events == null) {
             networkManager.changeBaseUrl(url)
             viewModelScope.launch {
-                repo.invoke(characterRequest = characterRequest).onEach {
+                repo.invoke(characterRequest = characterRequest,
+                    hash = hash,ts = ts).onEach {
                     events = it
                 }.launchIn(viewModelScope)
             }

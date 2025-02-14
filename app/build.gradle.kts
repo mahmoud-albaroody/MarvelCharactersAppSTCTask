@@ -94,7 +94,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.3.0")
 
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
-
+    //splash
+    implementation("androidx.core:core-splashscreen:1.0.1")
     //JSON Conversion
     implementation("com.google.code.gson:gson:2.10.1")
 

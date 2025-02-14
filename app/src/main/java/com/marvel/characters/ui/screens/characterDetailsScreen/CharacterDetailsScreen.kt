@@ -1,6 +1,8 @@
 package com.marvel.characters.ui.screens.characterDetailsScreen
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,9 +38,11 @@ import com.marvel.characters.ui.component.TextWhite
 import com.marvel.characters.ui.screens.mainScreen.MainViewModel
 import com.marvel.characters.ui.theme.SecondaryFontColor
 import com.marvel.characters.utils.network.DataState
+import com.marvel.characters.utils.sharedPreferences.getKeys
 import kotlinx.coroutines.delay
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CharacterDetailsScreen(
     navController: NavController, mainViewModel: MainViewModel,
@@ -46,7 +51,7 @@ fun CharacterDetailsScreen(
     val charactersDetailsViewModel = hiltViewModel<CharactersDetailsViewModel>()
 
     var charactersItem by remember { mutableStateOf(Result()) }
-
+    val context = LocalContext.current
     var comicsUrl: String? = null
     var seriesUrl: String? = null
     var storesUrl: String? = null
@@ -72,22 +77,41 @@ fun CharacterDetailsScreen(
         }
         comicsUrl?.let {
             charactersDetailsViewModel
-                .comicsList(CharacterRequest(10, 1), url = it)
+                .comicsList(
+                    CharacterRequest(10, 1),
+                    url = it,
+                    getKeys(context).first.toString(),
+                    getKeys(context).second.toString()
+                )
         }
         delay(200)
         seriesUrl?.let {
             charactersDetailsViewModel
-                .seriesList(CharacterRequest(10, 1), url = it)
+                .seriesList(
+                    CharacterRequest(10, 1),
+                    url = it,
+                    getKeys(context).first.toString(),
+                    getKeys(context).second.toString()
+                )
         }
         delay(200)
         storesUrl?.let {
             charactersDetailsViewModel
-                .storesList(CharacterRequest(10, 1), url = it)
+                .storesList(
+                    CharacterRequest(10, 1), url = it,
+                    getKeys(context).first.toString(),
+                    getKeys(context).second.toString()
+                )
         }
-        delay(200)
+        delay(300)
         eventsUrl?.let {
             charactersDetailsViewModel
-                .eventsList(CharacterRequest(10, 1), url = it)
+                .eventsList(
+                    CharacterRequest(10, 1),
+                    url = it,
+                    getKeys(context).first.toString(),
+                    getKeys(context).second.toString()
+                )
         }
 
     }
@@ -202,9 +226,9 @@ fun CharacterDetailsScreen(
                                 .padding(horizontal = 8.dp)
                                 .padding(top = 8.dp)
                         ) {
-
+                            Spacer(modifier = Modifier.padding(bottom = 8.dp))
                             TextRed(text = stringResource(R.string.related_links))
-                            Spacer(modifier = Modifier.padding(bottom = 24.dp))
+                            Spacer(modifier = Modifier.padding(bottom = 16.dp))
                             it.map {
 
                                 Box(Modifier.padding(vertical = 10.dp)) {

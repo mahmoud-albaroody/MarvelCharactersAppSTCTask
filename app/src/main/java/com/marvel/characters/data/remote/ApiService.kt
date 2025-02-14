@@ -1,20 +1,19 @@
 package com.marvel.characters.data.remote
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.marvel.characters.data.model.CharactersModel
-import com.marvel.characters.utils.network.DataState
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
+    @RequiresApi(Build.VERSION_CODES.O)
     @GET("characters")
     suspend fun charactersList(
-        @Query("apikey") apikey: String= ApiURL.PUBLIC_KEY,
-        @Query("hash") hash: String? = "01efb57dfd9c19eec576b99dbbdf69f2",
-        @Query("ts") ts: String? = "1739283699287",
+        @Query("apikey") apikey: String = ApiURL.PUBLIC_KEY,
+        @Query("hash") hash: String?,
+        @Query("ts") ts: String? ,
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int? = null
     ): CharactersModel
-
-
 }
